@@ -22,7 +22,7 @@ useEffect(() => {
   .catch((error) => console.error('Error Fetching Data', error));
   }    
 }, [submittedSearch]);
-console.log(locationData);
+// console.log(locationData);
 
 
   return (

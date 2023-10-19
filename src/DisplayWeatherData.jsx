@@ -6,17 +6,20 @@ const DisplayWeatherData = ({ selectedLocation }) => {
   const [weatherData, setWeatherData] = useState({});
   const eightDates = [];
   const currDate = new Date();
-
-  for (let i = 0; i < 8; i++){
+  
+  for (let i = 0; i < 8; i++) {
     const date = new Date();
     date.setDate(currDate.getDate() + i);
     const formattedDate = date.toLocaleDateString('en-US', {
       weekday: 'long',
-      year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
-    eightDates.push(formattedDate);
+  
+    // Remove commas from the formattedDate
+    const dateWithoutCommas = formattedDate.replace(/,/g, '');
+  
+    eightDates.push(dateWithoutCommas);
   }
 
   useEffect(() => {
@@ -32,21 +35,33 @@ const DisplayWeatherData = ({ selectedLocation }) => {
 
 return (
   <>
- 
-  <div className='container border-primary d-flex justify-content-center align-items-center' id="8-day-forecast">
-    <p>
+  <div className='container border-primary d-flex justify-content-center align-items-center'>
+  <p>
     {selectedLocation.name} {selectedLocation.state && <span> {selectedLocation.state} </span>}
-    {selectedLocation.country && <span> ({selectedLocation.country}) <br /> 
+    {selectedLocation.country && <span> ({selectedLocation.country}) </span>}
+  </p>
+  </div>
+ 
+  <div className='container border-primary d-flex justify-content-center align-items-center'>
+ 
+{weatherData && weatherData.daily && Array.isArray(weatherData.daily) ? (
+  weatherData.daily.map((dayData, index) => (
+    <div key={index} id='eightDayForecast'>
+      <p className='text-center'>{eightDates[index]}</p>
+      <p className='text-center'>Temperature {Math.floor((dayData.temp.max - 273.15) * 9/5 + 32)}&deg; / {Math.floor((dayData.temp.min - 273.15) * 9/5 + 32)}&deg;</p>
+      {/* <p>Humidity: {dayData.humidity}</p> */}
+      {/* Add more properties as needed */} 
+    </div>
     
-    <ul>
-        {eightDates.map((date, index) => (
-          <li key={index}> {date}  </li>
-         
-        ))}
-      </ul> </span>}
-      </p>
+  ))
+) : (
+  <p>Weather data is not available.</p>
+)}
+
+      
 
   </div>
+  
   
   </>
 )
