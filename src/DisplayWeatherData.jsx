@@ -48,6 +48,8 @@ return (
   weatherData.daily.map((dayData, index) => (
     <div key={index} id='eightDayForecast'>
       <p className='text-center'>{eightDates[index]}</p>
+      {/* <p>{dayData.weather[index].icon}</p> */}
+      <img src={`https://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`} alt='Weather Icon' />
       <p className='text-center'>Temperature {Math.floor((dayData.temp.max - 273.15) * 9/5 + 32)}&deg; / {Math.floor((dayData.temp.min - 273.15) * 9/5 + 32)}&deg;</p>
       {/* <p>Humidity: {dayData.humidity}</p> */}
       {/* Add more properties as needed */} 
