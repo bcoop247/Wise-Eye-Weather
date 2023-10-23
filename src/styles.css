@@ -1,3 +1,9 @@
 #eightDayForecast{
 border: solid;
 }
+#showMoreWeatherDataIcon{
+  cursor: pointer;
+}
+#showMoreWeatherDataDiv{
+  border: solid;
+}
