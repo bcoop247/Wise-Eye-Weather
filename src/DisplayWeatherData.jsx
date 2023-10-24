@@ -22,6 +22,23 @@ const DisplayWeatherData = ({ selectedLocation }) => {
     eightDates.push(dateWithoutCommas);
   }
 
+  const shortDates = [];
+
+for (let i = 0; i < 8; i++) {
+  const date = new Date();
+  date.setDate(currDate.getDate() + i);
+  
+  // Get the day and month
+  const day = date.toLocaleDateString('en-US', { day: 'numeric' });
+  const month = date.toLocaleDateString('en-US', { month: 'short' });
+
+  // Combine day and month
+  const formattedDate = `${month} ${day}`;
+
+  shortDates.push(formattedDate);
+}
+
+
   useEffect(() => {
     if(selectedLocation){
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=83b8d01295497d35b3d864c1dbac5fc7`)
@@ -35,10 +52,24 @@ const DisplayWeatherData = ({ selectedLocation }) => {
 
   const [showMoreWeatherData, setShowMoreWeatherData] = useState(false);
   const [index, setIndex] = useState(null);
+  const [sunriseTimeStamp, setSunriseTimestamp] = useState(null);
+  const [sunsetTimeStamp, setSunsetTimestamp] = useState(null);
+  const [moonRiseTimeStamp, setMoonRiseTimestamp] = useState(null);
+  const [moonSetTimeStamp, setMoonSetTimestamp] = useState(null);
   const toggleMoreWeatherData = (index) => {
     setShowMoreWeatherData(!showMoreWeatherData);
     setIndex(index);
+    setSunriseTimestamp(weatherData.daily[index].sunrise);
+    setSunsetTimestamp(weatherData.daily[index].sunset);
+
   }
+  const sunriseTime = new Date(sunriseTimeStamp * 1000);
+  const sunriseHours = sunriseTime.getUTCHours();
+  const sunriseMinutes = sunriseTime.getUTCMinutes();
+ 
+  const sunsetTime = new Date(sunsetTimeStamp * 1000);
+  const sunsetHours = sunsetTime.getUTCHours();
+  const sunsetMinutes = sunsetTime.getUTCMinutes();
 
 return (
   <>
@@ -74,12 +105,25 @@ return (
 </div>
 {index != null && showMoreWeatherData && (<div id="showMoreWeatherDataDiv" className='container border-primary justify-content-center align-items-center'> 
 
-<h1>{eightDates[index]}</h1>
-<p>{weatherData.daily[index].feels_like.day}</p>
-<p>{weatherData.daily[index].summary}</p>
+<p className='text-center'>{eightDates[index]}</p>
+<p className='text-center'>Today will have {weatherData.daily[index].weather[0].description}. </p>
+<p className='text-center'>Humidity {weatherData.daily[index].humidity}% | UV Index {weatherData.daily[index].uvi} | Rain {weatherData.daily[index].pop * 100}% | Cloud Coverage {weatherData.daily[index].clouds}%</p>
 
+<div className="row">
+    <div className="col-md-6">
+      <p className='text-center'>Day</p>
+      <p className='text-center'>{Math.floor((weatherData.daily[index].temp.max - 273.15) * 9/5 + 32)}&deg; | <em>Feels Like</em> {Math.floor((weatherData.daily[index].feels_like.day - 273.15) * 9/5 + 32)}&deg; </p>
+      
+    </div>
+    <div className="col-md-6">
+      
+      <p className='text-center'>NIGHT {Math.floor((weatherData.daily[index].temp.min - 273.15) * 9/5 + 32)}&deg;</p>
+      <p>Other data for NIGHT</p>
+    </div>
+  </div>
 
 </div>)}
+
   
   
   </>
