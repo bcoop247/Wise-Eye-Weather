@@ -22,7 +22,7 @@ const DisplayWeatherData = ({ selectedLocation }) => {
     eightDates.push(dateWithoutCommas);
   }
 
-  const shortDates = [];
+  const longDates = [];
 
 for (let i = 0; i < 8; i++) {
   const date = new Date();
@@ -30,11 +30,13 @@ for (let i = 0; i < 8; i++) {
   
   // Get the day and month
   const day = date.toLocaleDateString('en-US', { day: 'numeric' });
-  const month = date.toLocaleDateString('en-US', { month: 'short' });
+  const month = date.toLocaleDateString('en-US', { month: 'long' });
+  const weekday = date.toLocaleDateString('en-US', {weekday: 'long'});
+  const year = date.toLocaleDateString('en-US', {year: 'numeric'});
 
-  const formattedDate = `${month} ${day}`;
+  const formattedDate = `${weekday} ${month} ${day} `;
 
-  shortDates.push(formattedDate);
+  longDates.push(formattedDate);
 }
 
   useEffect(() => {
@@ -44,7 +46,7 @@ for (let i = 0; i < 8; i++) {
     .then(data => setWeatherData(data))
     .catch((error) => console.error('Error Fetching Weather Data', error));
     }
-  }, [])
+  }, [selectedLocation])
 
   console.log(weatherData);
 
@@ -57,13 +59,21 @@ for (let i = 0; i < 8; i++) {
 
   const [localSunsetTime, setLocalSunsetTime] = useState('');
   const [sunsetUnixTimestamp, setSunsetUnixTimestamp] = useState(null);
+
+  const [localMoonriseTime, setLocalMoonriseTime] = useState('');
+  const [moonriseUnixTimestamp, setMoonRiseUnixTimestamp] = useState(null);
+
+  const [localMoonsetTime, setLocalMoonsetTime] = useState('');
+  const [moonsetUnixTimestamp, setMoonsetUnixTimestamp] = useState(null);
  
   const toggleMoreWeatherData = (index) => {
     setShowMoreWeatherData(!showMoreWeatherData);
     setIndex(index);
-    setSunriseUnixTimestamp(weatherData.daily[index].sunrise);
     setTargetTimeZone(weatherData.timezone);
+    setSunriseUnixTimestamp(weatherData.daily[index].sunrise);
     setSunsetUnixTimestamp(weatherData.daily[index].sunset);
+    setMoonRiseUnixTimestamp(weatherData.daily[index].moonrise);
+    setMoonsetUnixTimestamp(weatherData.daily[index].moonset);
   }
 
   useEffect(() => {
@@ -74,6 +84,12 @@ for (let i = 0; i < 8; i++) {
       const localSunsetTime = moment.unix(sunsetUnixTimestamp).tz(targetTimeZone);
       const sunsetFormattedTime = localSunsetTime.format('h:mm');
       setLocalSunsetTime(sunsetFormattedTime);
+      const localMoonriseTime = moment.unix(moonriseUnixTimestamp).tz(targetTimeZone);
+      const moonriseFormatteTime = localMoonriseTime.format('h:mm');
+      setLocalMoonriseTime(moonriseFormatteTime);
+      const localMoonsetTime = moment.unix(moonsetUnixTimestamp).tz(targetTimeZone);
+      const moonsetFormatteTime = localMoonsetTime.format('h:mm');
+      setLocalMoonsetTime(moonsetFormatteTime);
     }
   }, [sunriseUnixTimestamp, targetTimeZone]);
 
@@ -81,17 +97,17 @@ for (let i = 0; i < 8; i++) {
 return (
   <>
   <div className='container border-primary d-flex justify-content-center align-items-center'>
-  <p>
+  <h4>
     {selectedLocation.name} {selectedLocation.state && <span> {selectedLocation.state} </span>}
     {selectedLocation.country && <span> ({selectedLocation.country}) </span>}
-  </p>
+  </h4>
   </div>
  
   <div className='container border-primary d-flex justify-content-center align-items-center'>
  
 {weatherData && weatherData.daily && Array.isArray(weatherData.daily) ? (
   weatherData.daily.map((dayData, index) => (
-    <div key={index} id='eightDayForecast' className='text-center'>
+    <div key={index} id='eightDayForecast' className='container text-center rounded'>
       <p className='text-center'>{eightDates[index]}</p>
       <img src={`https://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`} alt='Weather Icon'  />
       <p className='text-center'>{Math.floor((dayData.temp.max - 273.15) * 9/5 + 32)}&deg; / {Math.floor((dayData.temp.min - 273.15) * 9/5 + 32)}&deg;</p>
@@ -110,23 +126,15 @@ return (
 )}
 
 </div>
-{index != null && showMoreWeatherData && (<div id="showMoreWeatherDataDiv" className='container border-primary justify-content-center align-items-center'> 
+{index != null && showMoreWeatherData && (<div id="showMoreWeatherDataDiv" className='container border-primary justify-content-center align-items-center rounded'> 
 
-<p className='text-center'>{eightDates[index]}</p>
+<p className='text-center'>{longDates[index]}</p>
 <p className='text-center'>Today will have {weatherData.daily[index].weather[0].description}. It is currently {Math.floor((weatherData.current.temp - 273.15) * 9/5 + 32)}&deg; and <em>feels like</em> {Math.floor((weatherData.current.feels_like - 273.15) * 9/5 + 32)}&deg; </p>
 <p className='text-center'>Humidity {weatherData.daily[index].humidity}% | UV Index {weatherData.daily[index].uvi} | Rain {weatherData.daily[index].pop * 100}% | Cloud Coverage {weatherData.daily[index].clouds}%</p>
 
-<div className="row">
-    <div className="col-md-6">
-      <p className='text-center'>Sunrise: {localSunriseTime} am</p>
-      <p className='text-center'>Sunset: {localSunsetTime} pm</p>
-      
-    </div>
-    <div className="col-md-6">
-      
-      <p className='text-center'>NIGHT {Math.floor((weatherData.daily[index].temp.min - 273.15) * 9/5 + 32)}&deg;</p>
-      <p>Other data for NIGHT</p>
-    </div>
+<div className=" container row">
+    
+      <p className='text-center'>Sunrise: {localSunriseTime} am | Sunset: {localSunsetTime} pm | Moonrise: {localMoonriseTime} pm | Moonset: {localMoonsetTime} am</p>
   </div>
 
 </div>)}

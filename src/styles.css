@@ -1,3 +1,8 @@
+body{
+background: rgb(63,251,232);
+background: radial-gradient(circle, rgba(63,251,232,1) 0%, rgba(70,185,252,1) 100%);
+font-family: Georgia, 'Times New Roman', Times, serif;
+}
 #eightDayForecast{
 border: solid;
 }
@@ -5,5 +10,10 @@ border: solid;
   cursor: pointer;
 }
 #showMoreWeatherDataDiv{
-  border: solid;
+  margin-top: 5px;
+  font-size: 20px;
+  
+}
+.custom-h5{
+text-decoration: underline;
 }

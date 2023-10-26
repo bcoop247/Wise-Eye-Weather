@@ -7,7 +7,6 @@ const Search = () => {
   const [submittedSearch, setSubmittedSearch] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(false);
   
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmittedSearch(userQuery);
@@ -22,21 +21,21 @@ useEffect(() => {
   .catch((error) => console.error('Error Fetching Data', error));
   }    
 }, [submittedSearch]);
-// console.log(locationData);
-
 
   return (
     <>
-    <div className="d-flex justify-content-center">
-      <form onSubmit={handleSubmit}>
-      <input type="text" value={userQuery} onChange={(e) => setUserQuery(e.target.value)} />
-      <input type="submit" />
+    <div className="mb-3 d-flex justify-content-center">
+      <form onSubmit={handleSubmit} className='d-flex'>
+      <input type="text" value={userQuery} className='form-control' onChange={(e) => setUserQuery(e.target.value)} />
+      <input type="submit" className='btn btn-primary' value="Search" />
       </form>
     </div>
    <br />
     <div className="d-flex justify-content-center">
     
-    <ul>      
+    <ul>
+      {submittedSearch && (<h5 className='containter custom-h5'>Select Your Location</h5>)}
+      
       {locationData.map((location, index) => <li style={{listStyleType: "none", cursor: "pointer"}} key={index} onClick={() => { setSelectedLocation(location) }} >{location.name} {location.state && <span> {location.state}</span>}
       {location.country && <span> ({location.country})</span>}
       </li>) }
@@ -44,10 +43,6 @@ useEffect(() => {
     
     </div>
 
-    <div className='container d-flex justify-content-center align-items-center'>
-    <p className='text-center'>Search Engine is very flexible. Here's how it works: <br /> To make it more precise put the city's name, comma, 2-letter country code. You will get all proper cities in chosen country.
-    The order is important - the first is city name then comma then country. Example - London, GB or New York, US.</p>
-    </div>
     {selectedLocation && <DisplayWeatherData selectedLocation={selectedLocation} />}
     
     </>
