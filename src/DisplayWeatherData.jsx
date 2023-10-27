@@ -65,6 +65,8 @@ for (let i = 0; i < 8; i++) {
 
   const [localMoonsetTime, setLocalMoonsetTime] = useState('');
   const [moonsetUnixTimestamp, setMoonsetUnixTimestamp] = useState(null);
+
+  const [selectedButton, setSelectedButton] = useState(null);
  
   const toggleMoreWeatherData = (index) => {
     setShowMoreWeatherData(!showMoreWeatherData);
@@ -74,6 +76,7 @@ for (let i = 0; i < 8; i++) {
     setSunsetUnixTimestamp(weatherData.daily[index].sunset);
     setMoonRiseUnixTimestamp(weatherData.daily[index].moonrise);
     setMoonsetUnixTimestamp(weatherData.daily[index].moonset);
+    // setSelectedButton(index);
   }
 
   useEffect(() => {
@@ -130,7 +133,7 @@ return (
 
 <p className='text-center'>{longDates[index]}</p>
 <p className='text-center'>Today will have {weatherData.daily[index].weather[0].description}. It is currently {Math.floor((weatherData.current.temp - 273.15) * 9/5 + 32)}&deg; and <em>feels like</em> {Math.floor((weatherData.current.feels_like - 273.15) * 9/5 + 32)}&deg; </p>
-<p className='text-center'>Humidity {weatherData.daily[index].humidity}% | UV Index {weatherData.daily[index].uvi} | Rain {weatherData.daily[index].pop * 100}% | Cloud Coverage {weatherData.daily[index].clouds}%</p>
+<p className='text-center'>Humidity {weatherData.daily[index].humidity}% | UV Index {weatherData.daily[index].uvi} | Rain {(weatherData.daily[index].pop * 100).toFixed(2)}% | Cloud Coverage {weatherData.daily[index].clouds}%</p>
 
 <div className=" container row">
     
