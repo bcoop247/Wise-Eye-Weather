@@ -12,6 +12,7 @@ const Search = () => {
     e.preventDefault();
     setSubmittedQuery(searchQuery);
     setShowLocationList(true);
+    setSelectedLocation(null);
 
   }
   useEffect(() => {
@@ -45,7 +46,9 @@ console.log(locationResults);
 
 {showLocationList && locationResults && locationResults.length > 0 && (
 <div className='d-flex justify-content-center'>
+  
   <ul>
+  <h3>Location Results</h3>
   {locationResults.map((location, index) => (
   <li key={index} onClick={() => handleLocationClick(location)} style={{listStyleType: "none", cursor: "pointer"}}> {location.name} {location.state && <span> {location.state}</span>}{location.country && <span>({location.country})</span>}</li>
   ))}

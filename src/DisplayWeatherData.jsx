@@ -66,18 +66,23 @@ for (let i = 0; i < 8; i++) {
   const [localMoonsetTime, setLocalMoonsetTime] = useState('');
   const [moonsetUnixTimestamp, setMoonsetUnixTimestamp] = useState(null);
 
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
  
   const toggleMoreWeatherData = (index) => {
-    setShowMoreWeatherData(!showMoreWeatherData);
-    setIndex(index);
-    setTargetTimeZone(weatherData.timezone);
-    setSunriseUnixTimestamp(weatherData.daily[index].sunrise);
-    setSunsetUnixTimestamp(weatherData.daily[index].sunset);
-    setMoonRiseUnixTimestamp(weatherData.daily[index].moonrise);
-    setMoonsetUnixTimestamp(weatherData.daily[index].moonset);
-    // setSelectedButton(index);
-  }
+    if (selectedDate === index) {
+      setSelectedDate(null);
+      setShowMoreWeatherData(false); // Hide data when clicking the same date
+    } else {
+      setSelectedDate(index);
+      setShowMoreWeatherData(true); // Show data for the clicked date
+      setIndex(index);
+      setTargetTimeZone(weatherData.timezone);
+      setSunriseUnixTimestamp(weatherData.daily[index].sunrise);
+      setSunsetUnixTimestamp(weatherData.daily[index].sunset);
+      setMoonRiseUnixTimestamp(weatherData.daily[index].moonrise);
+      setMoonsetUnixTimestamp(weatherData.daily[index].moonset);
+    }
+  };
 
   useEffect(() => {
     if(sunriseUnixTimestamp && targetTimeZone) {
@@ -129,10 +134,10 @@ return (
 )}
 
 </div>
-{index != null && showMoreWeatherData && (<div id="showMoreWeatherDataDiv" className='container border-primary justify-content-center align-items-center rounded'> 
+{index != null && showMoreWeatherData && (<div id="showMoreWeatherDataDiv" className='container border border-black border-3 justify-content-center align-items-center rounded'> 
 
-<p className='text-center'>{longDates[index]}</p>
-<p className='text-center'>Today will have {weatherData.daily[index].weather[0].description}. It is currently {Math.floor((weatherData.current.temp - 273.15) * 9/5 + 32)}&deg; and <em>feels like</em> {Math.floor((weatherData.current.feels_like - 273.15) * 9/5 + 32)}&deg; </p>
+<p className='text-center' id="underline">{longDates[index]}</p>
+<p className='text-center'>Expect {weatherData.daily[index].weather[0].description} with a high of {Math.floor((weatherData.daily[index].temp.max - 273.15) * 9/5 + 32)}&deg; and a low of {Math.floor((weatherData.daily[index].temp.min - 273.15) * 9/5 + 32)}&deg;</p>
 <p className='text-center'>Humidity {weatherData.daily[index].humidity}% | UV Index {weatherData.daily[index].uvi} | Rain {(weatherData.daily[index].pop * 100).toFixed(2)}% | Cloud Coverage {weatherData.daily[index].clouds}%</p>
 
 <div className=" container row">
@@ -142,8 +147,6 @@ return (
 
 </div>)}
 
-  
-  
   </>
 )
 }
