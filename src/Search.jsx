@@ -50,7 +50,7 @@ console.log(locationResults);
   <ul>
   <h3>Location Results</h3>
   {locationResults.map((location, index) => (
-  <li key={index} onClick={() => handleLocationClick(location)} style={{listStyleType: "none", cursor: "pointer"}}> {location.name} {location.state && <span> {location.state}</span>}{location.country && <span>({location.country})</span>}</li>
+  <li key={index} onClick={() => handleLocationClick(location)} id='locationResults' style={{listStyleType: "none", cursor: "pointer"}}> {location.name} {location.state && <span> {location.state}</span>}{location.country && <span>({location.country})</span>}</li>
   ))}
 </ul>
 </div>
