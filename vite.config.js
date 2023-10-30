@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/Wise-Eye-Weather/',
   plugins: [react()],
-  base: "/http://bcoop247.github.io/Wise-Eye-Weather/",
 })
